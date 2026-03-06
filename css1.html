@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CSS3 통합 연습</title>
+
+<style>
+
+/* 전체 선택자 */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+/* 태그 선택자 */
+h1 {
+    color: red;
+}
+
+p {
+    color: blue;
+}
+
+/* id 선택자 */
+#header {
+    width: 800px;
+    margin: 0 auto;
+    background: red;
+    color: white;
+    padding: 20px;
+}
+
+/* class 선택자 */
+.select {
+    color: orange;
+}
+
+/* 태그 + class */
+li.select {
+    color: green;
+}
+
+/* 여러 클래스 */
+.item {
+    font-size: 20px;
+}
+
+.header {
+    background-color: lightblue;
+}
+
+/* 자식 선택자 */
+#section > h1 {
+    color: purple;
+}
+
+/* 하위 선택자 */
+#header h2 {
+    color: yellow;
+}
+
+/* 속성 선택자 */
+input[type="text"] {
+    background: pink;
+}
+
+input[type="password"] {
+    background: lightgray;
+}
+
+/* CSS 속성 연습 */
+.box {
+    width: 300px;
+    height: 100px;
+    border: 2px solid black;
+    margin: 20px;
+    padding: 10px;
+    background-color: beige;
+}
+
+/* float 레이아웃 예제 */
+#wrap {
+    width: 800px;
+    margin: 20px auto;
+    overflow: hidden;
+}
+
+#aside {
+    width: 200px;
+    float: left;
+    background: skyblue;
+}
+
+#content {
+    width: 600px;
+    float: left;
+    background: lightgreen;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="header">
+    <h1>CSS 선택자 연습</h1>
+    <h2>Header 영역</h2>
+</div>
+
+<div id="wrap">
+
+<div id="aside">
+    <h3>사이드 메뉴</h3>
+    <ul>
+        <li class="select">사과</li>
+        <li>바나나</li>
+        <li class="select">오렌지</li>
+        <li>감</li>
+    </ul>
+</div>
+
+<div id="content">
+    <h1 class="item header">콘텐츠 제목</h1>
+    <p>Lorem ipsum dolor sit amet.</p>
+
+    <div class="box">
+        박스 영역 (width / height / margin / padding 연습)
+    </div>
+
+    <form>
+        <input type="text" placeholder="아이디">
+        <br><br>
+        <input type="password" placeholder="비밀번호">
+    </form>
+
+</div>
+
+</div>
+
+</body>
+</html>
+
+  <!-- /* body 바로 아래의 div(=부모 컨테이너) */
+    body > div {
+      width: 400px;
+      height: 100px;
+      /*  부모 높이를 100px로 고정 */
+      border: 3px solid black;
+      position: relative;
+      /*  absolute( 자식들)의 기준점이 됨 */
+      /* overflow: hidden;         => 현재는 미적용 상태  기본값은 overflow: visible */
+    } -->
+ 
