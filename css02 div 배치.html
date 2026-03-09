@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>레이아웃 실습하기</title>
+    <style>
+        /* 기본 초기화 */
+        body { margin: 0; padding: 0; font-family: sans-serif; }
+
+        /* 7번 파일 핵심: 화면에 고정되는 상단 바 (position: fixed) */
+        .top_bar {
+            background: #ff5252;
+            color: white;
+            position: fixed;
+            left: 0; top: 0; right: 0;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        /* 본문 컨테이너 (상단 바 높이만큼 위쪽 여백을 줘야 가려지지 않아요) */
+        .container {
+            margin-top: 80px;
+            padding: 20px;
+            display: flex; /* 수평 배치를 위해 사용 */
+            flex-wrap: wrap; 
+        }
+
+        #section {
+            background: #f4f4f4;
+            padding: 20px;
+            flex: 3; /* 본문이 더 넓게 */
+            min-width: 300px;
+        }
+
+        #menu {
+            background: #e0e0e0;
+            padding: 20px;
+            flex: 1; /* 메뉴는 좁게 */
+            min-width: 200px;
+        }
+
+        /* 8번 파일 핵심: 미디어 쿼리 (화면 너비가 768px 이하일 때) */
+        @media screen and (max-width: 768px) {
+            .container {
+                flex-direction: column; /* 가로 배열을 세로 배열로 변경 */
+            }
+            #menu {
+                order: -1; /* 모바일에서는 메뉴가 위로 오게 변경 */
+            }
+            .top_bar {
+                background: #333; /* 모바일임을 알 수 있게 색상 변경 */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top_bar">
+        <strong>나의 첫 반응형 웹 사이트</strong>
+    </div>
+
+    <div class="container">
+        <div id="section">
+            <h1>본문 영역 (Section)</h1>
+            <p>레오나르도 디카프리오.</p>
+            <p>브라우저 창의 가로 폭을 줄이면 줄바꿈도 된다~ 이게 미디어 쿼리 작동했다는 사실.</p>
+        </div>
+
+        <div id="menu">
+            <h3>메뉴 (Menu)</h3>
+            <ul>
+                <li>메뉴 A</li>
+                <li>메뉴 B</li>
+                <li>메뉴 C</li>
+            </ul>
+        </div>
+    </div>
+
+</body>
+</html>
