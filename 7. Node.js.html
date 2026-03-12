@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Node.js 기초 문제 풀이 - 통합본</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; padding: 20px; background-color: #f4f4f4; }
+        .container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; border-bottom: 2px solid #ffcc00; padding-bottom: 10px; }
+        pre { background: #272822; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; }
+        .result-box { background: #e7f3fe; border-left: 6px solid #2196F3; padding: 10px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>KB IT’s Your Life - Node.js 기초 실습</h1>
+        <p>※ 모든 결과는 브라우저 <strong>Console(F12)</strong>에서도 확인할 수 있습니다.</p>
+
+        <section>
+            <h2>1. 함수 및 화살표 함수 (P.3, P.6)</h2>
+            <pre><code>const greet = name => console.log(`${name} 님, 안녕하세요?`);
+const getTriangle = (base, height) => base * height / 2;</code></pre>
+            <div id="res1" class="result-box"></div>
+        </section>
+
+        <section>
+            <h2>2. 비동기 처리 및 콜백 (P.7, P.8, P.9)</h2>
+            <p>3초 후 주문 완료 메시지가 나타납니다.</p>
+            <div id="res2" class="result-box">대기 중...</div>
+        </section>
+    </div>
+
+    <script>
+        // 1. 기초 함수 실행
+        const greet = name => {
+            const msg = `${name} 님, 안녕하세요?`;
+            console.log(msg);
+            document.getElementById('res1').innerHTML += msg + '<br>';
+        };
+        const getTriangle = (base, height) => base * height / 2;
+        
+        greet('홍길동');
+        const triangleArea = `삼각형의 면적: ${getTriangle(5, 2)}`;
+        console.log(triangleArea);
+        document.getElementById('res1').innerHTML += triangleArea;
+
+        // 2. 비동기 및 콜백 실습
+        const order = (menu, callback) => {
+            console.log(`${menu} 주문 접수`);
+            setTimeout(() => {
+                callback(menu);
+            }, 3000);
+        };
+
+        const display = (result) => {
+            const msg = `${result} 완료! (비동기 처리)`;
+            console.log(msg);
+            document.getElementById('res2').innerText = msg;
+        };
+
+        order('아메리카노', display);
+
+        // ※ 참고: module.exports와 require는 서버용 문법이라 
+        // 브라우저 HTML에서는 실행되지 않으므로 논리적으로만 이해하기!!
+    </script>
+</body>
+</html>
