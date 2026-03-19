@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue.js 기초 통합 정리</title>
+  </head>
+  <body>
+    <div id="app">
+      <h1>고정된 화면 제목 (View)</h1>
+
+      <h2>메시지: {{ message }}</h2>
+      <p>이름: {{ name }} (나이: {{ age }})</p>
+
+      <p>첫 번째 취미: {{ hobby[0] }}</p>
+      <p>여행지 - 국내: {{ tour.국내 }}, 국외: {{ tour.국외 }}</p>
+
+      <p v-if="coffee">☕ 커피를 좋아하는 분이군요!</p>
+    </div>
+
+    <hr />
+
+    <script src="https://unpkg.com/vue"></script>
+
+    <script>
+      /* [MODEL] : 데이터 그 자체 (객체 리터럴 형태)
+           - 변경 사항을 체크할 원본 데이터를 정의.
+           - { 키: 값 } 형태로 구성됨.
+        */
+      let model = {
+        message: 'Hello!! Vue3!!!',
+        name: '흰둥이',
+        age: 52,
+        hobby: ['뼈다귀 탐색', '코딩'],
+        coffee: true,
+        tour: { 국내: '대전', 국외: '일본' },
+      };
+
+      /* [VIEW-MODEL] : Vue Instance (연결 고리)
+           - Vue.createApp: 뷰 애플리케이션을 생성함.
+           - data() { return model; }: 
+             이 함수가 리턴한 데이터만 가상 DOM(Virtual DOM)에서 변화를 감시.
+           - mount('#app'): 
+             데이터가 변했을 때 HTML의 어떤 부분(#app)을 업데이트할지 결정(연결)함.
+        */
+      const app = Vue.createApp({
+        name: 'App', // 컴포넌트 이름 지정 (디버깅 용도)
+        data() {
+          // model 객체를 반환하여 Vue가 감시하게 함
+          return model;
+        },
+      });
+
+      // 지정한 ID(#app)를 가진 HTML 요소에 Vue를 장착!
+      app.mount('#app');
+
+      /* 참고: hi(); 같은 일반 함수 호출은 Vue의 생명주기에 맞춰 사용하거나 
+           전역에서 별도로 실행할 수 있다. */
+    </script>
+  </body>
+</html>
