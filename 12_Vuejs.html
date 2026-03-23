@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue.js 스타일 및 Todo 실습 통합본</title>
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.2.3/dist/css/bootstrap.min.css" />
+    <script src="https://unpkg.com/vue"></script>
+    <style>
+        /* [기초 섹션용 스타일] */
+        section { border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; border-radius: 8px; background-color: #fdfdfd; }
+        h2 { color: #333; font-size: 1.2em; border-left: 5px solid #ffcc00; padding-left: 10px; margin-bottom: 15px; }
+        
+        .buttonColor { background-color: aqua; color: black; }
+        .buttonLayout { text-align: center; width: 120px; display: inline-block; }
+        .staticBorder { border: khaki dashed 1px; padding: 10px; cursor: pointer; }
+        
+        .btnColor { background-color: aqua; color: black; }
+        .btnAlign { text-align: center; width: 120px; display: inline-block; }
+        .btnBorder { border: khaki dashed 1px; }
+        .error { color: red; font-weight: bold; margin-top: 10px; }
+
+        /* [06-11 Todo App 전용 스타일] */
+        .title { text-align: center; font-weight: bold; font-size: 20pt; }
+        .todo-done { text-decoration: line-through; color: #aaa; } /* 완료 시 취소선 */
+        .pointer { cursor: pointer; }
+        .card-borderless { border: 0; box-shadow: none; }
+    </style>
+</head>
+<body>
+
+<div id="app" class="container mt-4">
+    <h1 class="text-center mb-5">Vue.js 스타일 바인딩 마스터</h1>
+
+    <section>
+        <h2>06-02. 이벤트 핸들러 스타일 변경</h2>
+        <p>마우스를 올리면(mouseover) 노란색, 나가면(mouseout) 아쿠아색으로 변함.</p>
+        <button :style="style1" @mouseover="overEvent" @mouseout="outEvent" class="btn">마우스 테스트</button>
+    </section>
+
+    <section>
+        <h2>06-03. 개별 데이터 변수 바인딩</h2>
+        <p>data에 정의된 각 속성값을 인라인 스타일 객체 안에서 직접 매핑.</p>
+        <button :style="{ backgroundColor: myBg, color: myColor }" class="btn">개별 변수 테스트</button>
+    </section>
+
+    <section>
+        <h2>06-04. 스타일 객체 배열 바인딩</h2>
+        <p>배열 구문 [ ]을 사용하여 여러 개의 스타일 객체를 하나로 합침.</p>
+        <button :style="[myColorObj, myLayoutObj]" class="btn">객체 배열 테스트</button>
+    </section>
+
+    <section>
+        <h2>06-05. 클래스 바인딩 기초</h2>
+        <p>데이터 변수에 담긴 클래스 명 문자열을 배열 형태로 적용.</p>
+        <button class="staticBorder" :class="[myColorClass, myLayoutClass]">클래스 명 테스트</button>
+    </section>
+
+    <section>
+        <h2>06-07. 체크박스 클래스 토글</h2>
+        <label><input type="checkbox" v-model="isLayout"> 레이아웃(너비/정렬) 적용</label>
+        <br><br>
+        <button class="staticBorder" :class="{ buttonLayout: isLayout }">토글 버튼</button>
+    </section>
+
+    <section>
+        <h2>06-08/09. 다중 클래스 객체 바인딩</h2>
+        <p>객체의 속성값이 true인 클래스만 실시간으로 버튼에 추가.</p>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" v-model="btnStyle.btnColor"> <label>색상</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" v-model="btnStyle.btnAlign"> <label>정렬/크기</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" v-model="btnStyle.btnBorder"> <label>테두리</label>
+        </div>
+        <br><br>
+        <button :class="btnStyle" class="btn">스타일 믹스 버튼</button>
+    </section>
+
+    <section>
+        <h2>06-10. 조건부 경고 스타일 (v-if)</h2>
+        점수 입력(1~100): <input type="number" v-model.number="score" class="form-control d-inline-block w-auto">
+        <div v-if="score < 1 || score > 100" class="error">
+            ⚠️ 1부터 100까지만 입력 가능. (현재: {{score}})
+        </div>
+    </section>
+
+    <hr class="my-5">
+
+    <section class="border-0 shadow-sm p-0">
+        <div class="card card-body bg-dark text-white mb-3">
+            <div class="title">:: Todolist App</div>
+        </div>
+        
+        <div class="card card-default card-borderless">
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="할일을 여기에 입력하세요!!" 
+                                v-model="todo" @keyup.enter="addTodo" />
+                            <span class="btn btn-primary input-group-addon" @click="addTodo">추가</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <ul class="list-group">
+                            <li v-for="todoitem in todolist" :key="todoitem.id" 
+                                class="list-group-item d-flex justify-content-between align-items-center"
+                                :class="{ 'list-group-item-success': todoitem.completed }"
+                                @click="toggleCompleted(todoitem.id)">
+                                
+                                <span class="pointer" :class="{ 'todo-done': todoitem.completed }">
+                                    {{ todoitem.todo }} {{ todoitem.completed ? "(완료)" : "" }}
+                                </span>
+
+                                <span class="badge bg-danger pointer" @click.stop="deleteTodo(todoitem.id)">삭제</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    const { createApp } = Vue;
+
+    // 할일 아이디 유니크(중복X) 처리를 위해 현재 시각을 구함
+    var ts = new Date().getTime();
+
+    createApp({
+        data() {
+            return {
+                // [기초 실습 데이터]
+                style1: { backgroundColor: "aqua", color: "black" },
+                myBg: 'aqua',
+                myColor: 'black',
+                myColorObj: { backgroundColor: 'purple', color: 'yellow' },
+                myLayoutObj: { width: '180px', height: '50px', textAlign: 'center', lineHeight: '50px' },
+                myColorClass: 'buttonColor',
+                myLayoutClass: 'buttonLayout',
+                isLayout: false,
+                btnStyle: { btnColor: false, btnAlign: false, btnBorder: false },
+                score: 50,
+
+                // [Todo App 데이터]
+                todo: '', // 입력창에 쓴 글자 저장
+                todolist: [
+                    { id: ts, todo: '자전거 타기', completed: false },
+                    { id: ts + 1, todo: '딸과 공원 산책', completed: true },
+                    { id: ts + 2, todo: '일요일 애견 카페', completed: false },
+                    { id: ts + 3, todo: 'Vue 원고 집필', completed: false },
+                ],
+            }
+        },
+        methods: {
+            // [기초 실습 메서드]
+            overEvent() { this.style1.backgroundColor = "yellow"; },
+            outEvent() { this.style1.backgroundColor = "aqua"; },
+
+            // [Todo App 메서드]
+            addTodo() {
+                // 2글자 이상 입력 시 리스트 끝(push)에 객체 리터럴 추가
+                if (this.todo.trim().length >= 2) {
+                    this.todolist.push({
+                        id: new Date().getTime(),
+                        todo: this.todo,
+                        completed: false,
+                    });
+                    this.todo = ''; // 추가 후 입력칸 비우기
+                }
+            },
+            deleteTodo(id) {
+                // 선택한 id로 위치를 찾아 배열에서 제거(splice)
+                let index = this.todolist.findIndex((item) => id === item.id);
+                this.todolist.splice(index, 1);
+            },
+            toggleCompleted(id) {
+                // 클릭 시 해당 id의 completed 속성값을 반전시켜 스타일 지정
+                let index = this.todolist.findIndex((item) => id === item.id);
+                this.todolist[index].completed = !this.todolist[index].completed;
+            }
+        }
+    }).mount('#app');
+</script>
+
+</body>
+</html>
