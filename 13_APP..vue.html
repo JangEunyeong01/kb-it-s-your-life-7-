@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue.js 실습 (에러 완벽 수정본)</title>
+  
+  <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.2.3/dist/css/bootstrap.min.css" />
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  
+  <style>
+    .title { font-weight: bold; font-size: 20pt; text-align: center; color: #333; }
+    .todo-done { text-decoration: line-through; color: #aaa; }
+    .pointer { cursor: pointer; }
+    .container { max-width: 600px; margin-top: 30px; }
+  </style>
+</head>
+<body>
+
+  <div id="app" class="container">
+    <div class="card card-body bg-light mb-3">
+      <div class="title">:: 실습 기록 (에러 수정 완료)</div>
+    </div>
+
+    <div class="card card-default">
+      <div class="card-body">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" v-model="todo" 
+                 @keyup.enter="addTodo" placeholder="할 일을 입력하세요" />
+          <button class="btn btn-primary" @click="addTodo">추가</button>
+        </div>
+
+        <ul class="list-group">
+          <li v-for="item in todolist" :key="item.id" 
+              class="list-group-item d-flex justify-content-between align-items-center"
+              :class="{ 'list-group-item-success': item.completed }">
+            
+            <span class="pointer" :class="{ 'todo-done': item.completed }"
+                  @click="toggleCompleted(item.id)">
+              {{ item.todo }} {{ item.completed ? "(완료)" : "" }}
+            </span>
+
+            <button class="btn btn-danger btn-sm" @click.stop="deleteTodo(item.id)">삭제</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* [에러 해결 포인트]
+       - '종결되지 않은 리터럴' 에러 방지를 위해 문자열은 항상 짝이 맞는 따옴표 사용
+       - 복잡한 정규식(/.../) 대신 명확한 조건문 사용
+    */
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          todo: "",
+          todolist: [
+            { id: 1, todo: "Vue 기초 실습", completed: false },
+            { id: 2, todo: "Props/Emit 복습", completed: true }
+          ]
+        };
+      },
+      methods: {
+        addTodo() {
+          // trim()을 사용하여 공백만 입력되는 에러 방지
+          if (this.todo.trim().length >= 2) {
+            this.todolist.push({
+              id: Date.now(), // 중복되지 않는 ID 생성
+              todo: this.todo,
+              completed: false
+            });
+            this.todo = ""; 
+          }
+        },
+        deleteTodo(id) {
+          // findIndex를 사용하여 정확한 인덱스 확보
+          let index = this.todolist.findIndex((item) => item.id === id);
+          if (index !== -1) {
+            this.todolist.splice(index, 1);
+          }
+        },
+        toggleCompleted(id) {
+          let index = this.todolist.findIndex((item) => item.id === id);
+          if (index !== -1) {
+            this.todolist[index].completed = !this.todolist[index].completed;
+          }
+        }
+      }
+      /* // 만약 정규식이 필요한 로직이 있었다면 아래처럼 안전하게 작성해야 합니다.
+      // 예시: const regex = /^[a-zA-Z]+$/; (끝에 슬래시가 반드시 있어야 함)
+      */
+    }).mount('#app');
+  </script>
+</body>
+</html>
